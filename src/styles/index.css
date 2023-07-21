@@ -1,12 +1,67 @@
+body {
+    font-family: sans-serif;
+    background: #f9f9f9;
+}
 
-/* 
+h1 {
+    text-align: center;
+    color: palevioletred;
+}
 
-    You can write your own styles here...
-    
-    
-    ...Or you can use the import command to include 
-    other sylesheets into your bunde as well, e.j:
-    
-    import 'relative/path/to/stylesheet.scss';
+.container-fluid {
+    margin: auto;
+    margin-top: 4rem;
+}
 
-*/
+.container-task {
+    width: 30rem;
+    height: auto;
+    margin: auto;
+    background-color: white;
+    box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.2);
+    position: relative;
+    text-align: left;
+}
+
+ul{
+    margin: 1rem;
+}
+
+li{
+    &:hover{
+        cursor: pointer;
+        .button-task{
+            opacity: 0.9;
+        }
+    }
+
+}
+
+.input {
+    border: none;
+    width: auto;
+    outline: none;
+    margin: 1rem;
+}
+
+::placeholder {
+    color: grey;
+}
+
+.button-task {
+    color: palevioletred;
+    float: right;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background: none;
+    border: none;
+    margin-top: 0.5rem;
+}
+
+.pendientes {
+    color: palevioletred;
+    margin: 1rem;
+    padding-bottom: 1rem;
+    
+}
