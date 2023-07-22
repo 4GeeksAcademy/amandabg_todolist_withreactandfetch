@@ -1,42 +1,57 @@
 import React, { useEffect, useState } from "react";
+//Para que se cargue cuando se renderiza el componente: useEffect(() => {
+// Para enviar una lista vacía al servidor cuando el componente se monte por primera vez: postApi();
+//Obtener datos del servidor al cargar el componente: getActivitys();}, []);
+
 
 
 //create your first component
 const Home = () => {
-
-	//Link de la api
-	const todosApi = 'https://fake-todo-list-52f9a4ed80ce.herokuapp.com/todos/user/abarrelier_bg'
+	const todosApi = 'https://fake-todo-list-52f9a4ed80ce.herokuapp.com/todos/user/abarrelier_bg' //Link de la api
 	const [inputValue, setInputValue] = useState("");
 	const [activity, setActivity] = useState([]);
 
-	//Funcion para ejecutar el eliminar del boton
-	const sendActivity = (i) => {
-		putActivitys()
-		setActivity([{label: updatedActivity, done: false},...activity]);
+
+	//Funcion para ejecutar el eliminar del botton
+	const sendActivity = (id) => {
+		let newTasksList = activity.filter((to, index) => to.id !== id)
+		let options = {
+			method: 'PUT',
+			body: JSON. stringify(newTasksList),
+			headers: {
+				"Content-Type": "application/json"
+			}
+		}
+		fetch(todosApi, options)
+			.then(response => response.json())
+			.then(data => getActivitys())
+			.catch(err => err)
+		
 	}
 
 	//Funcion para recorrer el map
 	const addActivity = () => {
-		setActivity(activity.concat(inputValue));
+		setActivity([{ label: inputValue, done: false }, ...activity]);
 		setInputValue("");
+		putActivities();
 	}
 
-	// Fetch  GET API
-	const getActivitys = () => {
-		fetch(todosApi)
-			.then((response) => {
-				if (response.ok)
-					return response.json()
-				else postApi()
-			})
-			.then((data) => setActivity(data))
-			.catch((err) => console.log(err));
+	// Counter Tasks
+	function TasksCounter() {
+		if (activity.length === 0) return "No pending tasks";
+		else if (activity.length === 1) return "You have 1 pending task";
+		else return "You have " + activity.length + " pending tasks";
 	}
+
+	// Funcion para que el boton limpie todo de la lista
+	function clearList() {
+		setActivity([]); // Frontend
+		putActivities(); // Backend
+	}
+
 
 	//POST API Todos
-
 	const postApi = () => {
-
 		fetch(todosApi, {
 			method: 'POST',
 			body: JSON.stringify([]),
@@ -48,18 +63,19 @@ const Home = () => {
 			.then(data => console.log(data))
 			.catch(err => err)
 	}
+	// (Add & Delete) Update the API with fetch
 
-	//put
 
-	const putActivitys = () => {
+	const putActivities = () => {
 
-		var raw = JSON.stringify([{ label: activity, done: false }, ...activity]); // recorrer el arreglo completo y lo agrega
+		var myHeaders = new Headers();
+		myHeaders.append("Content-Type", "application/json");
+		//var raw = JSON.stringify([{ label: inputValue, done: false }, ...activity]); // recorrer el arreglo completo y lo agrega
+		 var raw = JSON.stringify(activity);
 		let options = {
 			method: 'PUT',
 			body: raw,
-			headers: {
-				'Content-Type': 'aplication/json'
-			}
+			headers: myHeaders
 		}
 		fetch(todosApi, options)
 			.then(response => response.json())
@@ -68,30 +84,32 @@ const Home = () => {
 	}
 
 
+	// Fetch  GET API
+	const getActivitys = () => {
+		fetch(todosApi)
+			.then((response) => {
+				if (response.ok) return response.json();
+				else postApi();
+			})
+			.then((data) => setActivity(data))
+			.catch((err) => console.log(err));
+	};
+
 
 	//Para que se cargue cuando se renderiza el componente
-	useEffect(() =>
-		getActivitys()
-	)
+	useEffect(() => {
+		getActivitys();
+	}, []);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-	//Aqui empieza el todo-list//
+	//Aqui empieza el to-do-list//
 	return (
 		<div className="container-fluid">
-			<h1>Todos</h1>
+			<h1>To Do List </h1>
 			<div className="container-task">
+				<div className="pendientes">
+					{TasksCounter()}
+				</div>
 				<input className="input"
 					type="text"
 					onChange={(e) => setInputValue(e.target.value)}
@@ -99,27 +117,32 @@ const Home = () => {
 					onKeyPress={(e) => {
 						if (e.key === "Enter") {
 							addActivity()
-
 						}
 					}}
-					placeholder="¿What do you need?"
+					placeholder="Add a new task"
 				/>
 				<ul className="list-group list-group-flush">
 					{activity.map((t, i) => {
 						return (
 							<li className="list-group-item" key={i}>
-								<label>{t}</label>
+								<label>{t.label}</label>
 								<button className="button-task" onClick={() => {
-									sendActivity(i)
+									sendActivity(t.id)
 								}}><i className="fas fa-times"></i></button>
 							</li>
 						)
 					})}
 				</ul>
 				<hr />
-				<div className="pendientes">{activity.length == 0 ? "No tasks, add a tasks items left" :
-					activity.length + " Items left"}</div>
+				<button className="btn btn-danger mt-2"
+					onClick={() => {
+						clearList();
+					}}
+				>
+					Delete All Tasks
+				</button>
 			</div>
+
 		</div>
 	);
 };

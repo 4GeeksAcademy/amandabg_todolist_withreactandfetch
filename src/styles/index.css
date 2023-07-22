@@ -1,33 +1,38 @@
 body {
     font-family: sans-serif;
-    background: #f9f9f9;
+    background: rgb(150, 207, 202);
 }
 
 h1 {
     text-align: center;
-    color: palevioletred;
+    color: lightseagreen;
 }
 
 .container-fluid {
-    margin: auto;
-    margin-top: 4rem;
-}
-
-.container-task {
     width: 30rem;
     height: auto;
     margin: auto;
     background-color: white;
     box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.2);
     position: relative;
-    text-align: left;
+    text-align: center;
+    margin-top: 4rem;
+    border-radius: 1rem;
+    padding-top: 1rem;
+}
+
+.container-task {
+  
 }
 
 ul{
     margin: 1rem;
 }
 
-li{
+.list-group-item{
+    justify-content: flex-start;
+    margin-top:1rem;
+    background: rgb(150, 207, 202);
     &:hover{
         cursor: pointer;
         .button-task{
@@ -46,10 +51,13 @@ li{
 
 ::placeholder {
     color: grey;
+    justify-content: flex-end;
+    
+    
 }
 
 .button-task {
-    color: palevioletred;
+    color: lightseagreen;
     float: right;
     transform: translate(-50%, -50%);
     opacity: 0;
@@ -60,8 +68,9 @@ li{
 }
 
 .pendientes {
-    color: palevioletred;
-    margin: 1rem;
-    padding-bottom: 1rem;
-    
+    color: rgb(150, 207, 202);
+}
+
+.btn-danger{
+    margin-bottom: 1rem;
 }
