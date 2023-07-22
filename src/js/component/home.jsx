@@ -17,23 +17,23 @@ const Home = () => {
 		let newTasksList = activity.filter((to, index) => to.id !== id)
 		let options = {
 			method: 'PUT',
-			body: JSON. stringify(newTasksList),
+			body: JSON.stringify(newTasksList),
 			headers: {
-				"Content-Type": "application/json"
+				"Content-Type":"application/json"
 			}
 		}
 		fetch(todosApi, options)
 			.then(response => response.json())
 			.then(data => getActivitys())
 			.catch(err => err)
-		
 	}
 
 	//Funcion para recorrer el map
 	const addActivity = () => {
-		setActivity([{ label: inputValue, done: false }, ...activity]);
+		setActivity([{ id: 1, label: inputValue, done: false }, ...activity]);
 		setInputValue("");
 		putActivities();
+		
 	}
 
 	// Counter Tasks
@@ -45,10 +45,17 @@ const Home = () => {
 
 	// Funcion para que el boton limpie todo de la lista
 	function clearList() {
-		setActivity([]); // Frontend
-		putActivities(); // Backend
+		setActivity([])
+		fetch(todosApi, {
+			method: 'DELETE'
+		})
+			.then(response => response.json())
+			.then(data => {
+				
+				postApi()
+			})
+			.catch(err => err)
 	}
-
 
 	//POST API Todos
 	const postApi = () => {
@@ -65,13 +72,11 @@ const Home = () => {
 	}
 	// (Add & Delete) Update the API with fetch
 
-
 	const putActivities = () => {
 
 		var myHeaders = new Headers();
 		myHeaders.append("Content-Type", "application/json");
-		//var raw = JSON.stringify([{ label: inputValue, done: false }, ...activity]); // recorrer el arreglo completo y lo agrega
-		 var raw = JSON.stringify(activity);
+		 var raw = JSON.stringify([{ id: 1, label: inputValue, done: false }, ...activity]);
 		let options = {
 			method: 'PUT',
 			body: raw,
@@ -94,7 +99,6 @@ const Home = () => {
 			.then((data) => setActivity(data))
 			.catch((err) => console.log(err));
 	};
-
 
 	//Para que se cargue cuando se renderiza el componente
 	useEffect(() => {
